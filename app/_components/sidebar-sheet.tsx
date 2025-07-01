@@ -1,17 +1,17 @@
 "use client"
-import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon, MenuIcon } from "lucide-react";
+import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon } from "lucide-react";
 import { Button } from "./ui/button";
-import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { quickSearchOptions } from "../_constants/search";
 import Image from "next/image";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { signOut, useSession } from "next-auth/react";
 import SignInDialog from "./sign-in-dialog";
 
 const SidebarSheet = () => {
-  const { data, status } = useSession();
+  const { data } = useSession();
 
   const handleLogoutClick = () => {
     signOut()
@@ -27,7 +27,7 @@ const SidebarSheet = () => {
       <div className="flex items-center justify-between py-5 border-b border-solid gap-2">
 
         {data?.user ? (
-          <div className="flex items-center gap-2">
+          <div key={data?.user?.email} className="flex items-center gap-2">
             <Avatar className="rounded-lg">
               <AvatarImage src={data?.user?.image ?? ""}
                 alt={data?.user?.name ?? ''}
