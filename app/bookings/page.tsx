@@ -1,12 +1,12 @@
-import { getServerSession } from "next-auth";
-import Header from "../_components/header";
-import { db } from "../_lib/prisma";
-import { authOptions } from "../_lib/auth";
-import { notFound } from "next/navigation";
-import BookingItem from "../_components/booking-item";
+import { getServerSession } from "next-auth"
+import Header from "../_components/header"
+import { db } from "../_lib/prisma"
+import { authOptions } from "../_lib/auth"
+import { notFound } from "next/navigation"
+import BookingItem from "../_components/booking-item"
 
 const Bookings = async () => {
-  const sessions = await getServerSession(authOptions);
+  const sessions = await getServerSession(authOptions)
 
   if (!sessions?.user) {
     //TODO: mostrar pop-up de login caso não esteja logado
@@ -23,14 +23,14 @@ const Bookings = async () => {
     include: {
       service: {
         include: {
-          barbershop: true
+          barbershop: true,
         },
       },
     },
     orderBy: {
-      date: "asc"
-    }
-  });
+      date: "asc",
+    },
+  })
 
   const concludedBookings = await db.booking.findMany({
     where: {
@@ -42,43 +42,50 @@ const Bookings = async () => {
     include: {
       service: {
         include: {
-          barbershop: true
+          barbershop: true,
         },
       },
     },
     orderBy: {
-      date: "asc"
-    }
-  });
+      date: "asc",
+    },
+  })
 
   return (
     <>
       <Header />
-      <div className="p-5 space-y-3">
-        <h1 className="text-xl font-bold">
-          Agendamentos
-        </h1>
+      <div className="space-y-3 p-5">
+        <h1 className="text-xl font-bold">Agendamentos</h1>
         {confirmedBookings.length > 0 && (
           <>
-            <h2 className="uppercase text-gray-400 font-bold text-xs mt-6 mb-4">
+            <h2 className="mb-4 mt-6 text-xs font-bold uppercase text-gray-400">
               Confirmados
             </h2>
-            {confirmedBookings.map(booking => <BookingItem key={booking.id} booking={booking} />)}
+            {confirmedBookings.map((booking) => (
+              <BookingItem
+                key={booking.id}
+                booking={JSON.parse(JSON.stringify(booking))}
+              />
+            ))}
           </>
         )}
 
         {concludedBookings.length > 0 && (
           <>
-            <h2 className="uppercase text-gray-400 font-bold text-xs mt-6 mb-4">
+            <h2 className="mb-4 mt-6 text-xs font-bold uppercase text-gray-400">
               Finalizados
             </h2>
-            {concludedBookings.map(booking => <BookingItem key={booking.id} booking={booking} />)}
+            {concludedBookings.map((booking) => (
+              <BookingItem
+                key={booking.id}
+                booking={JSON.parse(JSON.stringify(booking))}
+              />
+            ))}
           </>
         )}
-
       </div>
     </>
   )
 }
 
-export default Bookings;
+export default Bookings
